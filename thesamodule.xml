@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+        <record model="ir.ui.view" id="thesamodule_view_tree">
+             <field name="model">thesamodule.thesamodule</field>
+             <field name="type">tree</field>
+             <field name="name">thesamodule_tree</field>
+        </record>
+        <record model="ir.ui.view" id="thesamod_view_form">
+             <field name="model">thesamodule.config</field>
+             <field name="type">form</field>
+             <field name="name">thesamodule_view_form</field>
+        </record>
+        <record model="ir.action.act_window" id="act_thesamod_window">
+             <field name="name">Thesa</field>
+             <field name="res_model">thesamodule.config</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_thesamod_view1">
+             <field name="sequence" eval="10"/>
+             <field name="view" ref="thesamod_view_form"/>
+             <field name="act_window" ref="act_thesamod_window"/>
+        </record>
+        
+        <record model="ir.action.wizard" id="wizard_view_result_thesa">
+            <field name="name">View Result Thesa</field>
+            <field name="wiz_name">thesamodule.config_result_thesa</field>
+            <field name="model">thesamodule.config</field>
+        </record>
+        <record model="ir.action.keyword" id="wizard_view_result_thesamod_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">thesamodule.config,-1</field>
+            <field name="action" ref="wizard_view_result_thesa"/>
+        </record>
+        <record model="ir.ui.view" id="config_result_thesamod_start_view_form">
+            <field name="model">thesamodule.config_result_thesa.start</field>
+            <field name="type">form</field>
+            <field name="name">view_result_thesamodule_start_form</field>
+        </record>
+    
+        <menuitem name="Thesa" action="act_thesamod_window" id="menu_thesa"/>
+        
+    </data>
+</tryton>
