@@ -15,14 +15,15 @@ import hashlib
 
 __all__ = ['ThesaModules','ThesaModulesView','ViewResultThesaStart','ViewResultThesa']
 
-_internal_version_="1.0"
+_internal_version_="1.1"
 
 class ThesaModulesView(ModelSingleton, ModelSQL, ModelView):
     'Thesa Modules View Config'
     __name__='thesamodule.config'
     title = fields.Char('title',readonly=True)
-    internal_version = fields.Char('internal version',readonly=True)
+    internal_version = fields.Function(fields.Char('internal version'),'get_internal_version')
     modules = fields.One2Many('thesamodule.thesamodule', 'module', 'Modules')
+    deletecache = fields.Boolean('Delete Cache Qml On Load')
     
     @classmethod
     def __setup__(cls):
@@ -35,10 +36,10 @@ class ThesaModulesView(ModelSingleton, ModelSQL, ModelView):
     def default_title():
         return 'thesa modules'
     
-    @staticmethod
-    def default_internal_version():
+    def get_internal_version(self, name):
         return _internal_version_
 
+#@ModelView.button
     @classmethod
     @ModelView.button_action('thesamodule.wizard_view_result_thesa')
     def recharge(cls, ids):

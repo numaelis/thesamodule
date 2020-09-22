@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
  <form> 
-     <!--<label name="title" string="thesa modules"   colspan="3"/>-->
-          <field name="title" colspan="1"/>
-          <button string="UPDATE QML FOLDER " name="recharge" />
-          <newline/>
-          <field name="modules" mode="tree" colspan="4"
-                view_ids="thesamodule.thesamodule_view_tree"/>
+     
+     <label name="internal_version"/>  
+     <field name="internal_version"/>
+     <newline/>
+     <label name="deletecache"/>     
+     <field name="deletecache"/>
+     <field name="title" colspan="1"/>
+     <button string="UPDATE QML FOLDER " name="recharge" />
+     <newline/>
+     <field name="modules" mode="tree" colspan="4"
+           view_ids="thesamodule.thesamodule_view_tree"/>
  </form>
