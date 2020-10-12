@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form>
+  <label name="activefolder"/>  
+  <field name="activefolder"/>
+  <label name="type"/>  
+  <field name="type"/>
+  <label name="foldername"/>  
+  <field name="foldername"/>
+  
+  <field name="users" mode="tree" colspan="4"
+           view_ids="thesamodule.thesamodule_groupusers_view_tree"/>
+  
+  <field name="qmlfiles" mode="tree" colspan="4"
+           view_ids="thesamodule.thesamodule_view_tree"/>
+</form>

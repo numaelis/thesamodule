@@ -13,6 +13,8 @@ def register():
     Pool.register(
         ThesaModules,
         ThesaModulesView,
+        ThesaUsersFolder,
+        ThesaGroupUsers,
         ViewResultThesaStart,
         module="thesamodule", type_="model")
     Pool.register(

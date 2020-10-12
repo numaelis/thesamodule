@@ -3,12 +3,13 @@
      
      <label name="internal_version"/>  
      <field name="internal_version"/>
-     <newline/>
+     <!--<newline/>-->
      <label name="deletecache"/>     
      <field name="deletecache"/>
-     <field name="title" colspan="1"/>
-     <button string="UPDATE QML FOLDER " name="recharge" />
      <newline/>
-     <field name="modules" mode="tree" colspan="4"
-           view_ids="thesamodule.thesamodule_view_tree"/>
+     <field name="title" colspan="1"/>
+     <button string="UPDATE ALL QML FOLDERS " name="rechargeAll" />
+     <newline/>
+     <field name="configusers" mode="tree" colspan="4"
+           view_ids="thesamodule.thesamodule_usersfolder_view_tree"/>
  </form>

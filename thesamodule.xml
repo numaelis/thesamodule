@@ -1,6 +1,21 @@
 <?xml version="1.0"?>
 <tryton>
     <data>
+        <record model="ir.ui.view" id="thesamodule_usersfolder_view_tree">
+             <field name="model">thesamodule.usersfolder</field>
+             <field name="type">tree</field>
+             <field name="name">thesamodule_usersfolder_tree</field>
+        </record>
+        <record model="ir.ui.view" id="thesamodule_usersfolder_view_form">
+             <field name="model">thesamodule.usersfolder</field>
+             <field name="type">form</field>
+             <field name="name">thesamodule_usersfolder_form</field>
+        </record>
+        <record model="ir.ui.view" id="thesamodule_groupusers_view_tree">
+             <field name="model">thesamodule.groupusers</field>
+             <field name="type">tree</field>
+             <field name="name">thesamodule_groupusers_tree</field>
+        </record>
         <record model="ir.ui.view" id="thesamodule_view_tree">
              <field name="model">thesamodule.thesamodule</field>
              <field name="type">tree</field>

@@ -3,5 +3,4 @@
   <field name="filename"/>
   <field name="filebinary"/>
   <field name="checksum"/>
-  
 </tree>
