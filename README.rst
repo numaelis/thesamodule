@@ -1,6 +1,6 @@
 Thesa Module
 
-v 1.2
+v 1.3
 
 Tryton Module to serve qml files (tabs) for thesa.
 
