@@ -11,9 +11,9 @@ from .thesamodule import *
 
 def register():
     Pool.register(
-        ThesaModules,
         ThesaModulesView,
         ThesaUsersFolder,
+        ThesaModules,
         ThesaGroupUsers,
         ViewResultThesaStart,
         module="thesamodule", type_="model")

@@ -6,10 +6,17 @@
   <field name="type"/>
   <label name="foldername"/>  
   <field name="foldername"/>
-  
+  <!--
+  tryton 4
   <field name="users" mode="tree" colspan="4"
            view_ids="thesamodule.thesamodule_groupusers_view_tree"/>
   
   <field name="qmlfiles" mode="tree" colspan="4"
+           view_ids="thesamodule.thesamodule_view_tree"/>
+  -->
+  <field name="users" colspan="4"
+           view_ids="thesamodule.thesamodule_groupusers_view_tree"/>
+  
+  <field name="qmlfiles" colspan="4"
            view_ids="thesamodule.thesamodule_view_tree"/>
 </form>

@@ -4,7 +4,7 @@
 # the full copyright notices and license terms.
 __author__ = "Numael Garay"
 __license__ = "GPL"
-__version__ = "1.2" 
+__version__ = "1.3" 
 __maintainer__ = "Numael Garay" 
 __email__ = "mantrixsoft@gmail.com"
 
@@ -15,53 +15,18 @@ from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.pool import Pool
 from trytond.pyson import Eval, Or
+from trytond.exceptions import UserError, UserWarning
 from datetime import datetime
 import os
 import hashlib
 
 __all__ = ['ThesaModules','ThesaModulesView','ThesaUsersFolder','ThesaGroupUsers','ViewResultThesaStart','ViewResultThesa']
+           # 'ThesaUpdateLine', 'ThesaUpdate']
 
-_internal_version_="1.2"
+_internal_version_="1.3"
 
-class ThesaModulesView(ModelSingleton, ModelSQL, ModelView):
-    'Thesa Modules View Config'
-    __name__='thesamodule.config'
-    title = fields.Char('title',readonly=True)
-    internal_version = fields.Function(fields.Char('internal version'),'get_internal_version')
-    modules = fields.One2Many('thesamodule.thesamodule', 'module', 'Modules')
-    deletecache = fields.Boolean('Delete Cache Qml On Load')
-    configusers = fields.One2Many('thesamodule.usersfolder', 'configuser', 'Users Config')
-    @classmethod
-    def __setup__(cls):
-        super(ThesaModulesView, cls).__setup__()
-        cls._buttons.update({
-            'rechargeAll': {},
-            })
-        
-    @staticmethod
-    def default_title():
-        return 'thesa modules'
-            
-    def get_internal_version(self, name):
-        return _internal_version_
-    
-    #@ModelView.button
-    @classmethod
-    @ModelView.button_action('thesamodule.wizard_view_result_thesa')
-    def rechargeAll(cls, ids):
-        pass
+# _tryton50=True
 
-class ThesaModules(ModelSQL, ModelView):
-    'Thesa Modules'
-    __name__='thesamodule.thesamodule'
-    _rec_name='filename'
-    filename = fields.Char('File Name', required=True, readonly=True)
-    filebinary = fields.Binary('File store Qml', required=True, readonly=True)
-    checksum = fields.Char('checksum', required=True, readonly=True)
-    module = fields.Many2One('thesamodule.config','Module',required=False)
-    qmlfile = fields.Many2One('thesamodule.usersfolder','Qml File',  select=True, required=True, readonly=True)#ondelete='CASCADE',
-
-#only one default
 class ThesaUsersFolder(ModelSQL, ModelView):
     'Thesa Users Folder'
     __name__='thesamodule.usersfolder'
@@ -83,9 +48,10 @@ class ThesaUsersFolder(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(ThesaUsersFolder, cls).__setup__()
-        cls._error_messages.update({
-                'multiuser': ' the user: %s is already assigned in: folder %s',
-                })
+        # if _tryton50 == False:
+        #     cls._error_messages.update({
+        #             'multiuser': ' the user: %s is already assigned in: folder %s',
+        #             })
     @staticmethod
     def default_activefolder():
         return True
@@ -117,15 +83,80 @@ class ThesaUsersFolder(ModelSQL, ModelView):
                                             ["users.user.id","=",user['user']]
                                         ])
                                     folder = Folder[0].foldername
-                                    cls.raise_user_error('multiuser',(mapname[user['user']], folder))
+                                    #gettext(#
+                                    raise UserError(' the user: %s is already assigned in: folder %s'%(mapname[user['user']], folder))
         super(ThesaUsersFolder, cls).write(*args)
         
+        
+class ThesaModulesView(ModelSingleton, ModelSQL, ModelView):
+    'Thesa Modules View Config'
+    __name__='thesamodule.config'
+    title = fields.Char('title',readonly=True)
+    internal_version = fields.Function(fields.Char('internal version'),'get_internal_version')
+    modules = fields.One2Many('thesamodule.thesamodule', 'module', 'Modules')
+    deletecache = fields.Boolean('Delete Cache Qml On Load')
+    configusers = fields.One2Many('thesamodule.usersfolder', 'configuser', 'Users Config')
+    @classmethod
+    def __setup__(cls):
+        super(ThesaModulesView, cls).__setup__()
+        cls._buttons.update({
+            'rechargeAll': {},
+            })
+        
+    @staticmethod
+    def default_title():
+        return 'thesa modules'
+            
+    def get_internal_version(self, name):
+        return _internal_version_
+    
+    @classmethod
+    @ModelView.button_action('thesamodule.wizard_view_result_thesa')
+    def rechargeAll(cls, ids):
+        pass
+
+class ThesaModules(ModelSQL, ModelView):
+    'Thesa Modules'
+    __name__='thesamodule.thesamodule'
+    _rec_name='filename'
+    filename = fields.Char('File Name', required=True, readonly=True)
+    filebinary = fields.Binary('File store Qml', required=True, readonly=True)
+    checksum = fields.Char('checksum', required=True, readonly=True)
+    module = fields.Many2One('thesamodule.config','Module',required=False)
+    qmlfile = fields.Many2One('thesamodule.usersfolder','Qml File',  select=True, required=True, readonly=True, ondelete='CASCADE')#ondelete='CASCADE',
+
+#only one default
 #only one user for folder
+
 class ThesaGroupUsers(ModelSQL, ModelView):
     'Thesa Group Users'
     __name__='thesamodule.groupusers'
-    userfolder = fields.Many2One('thesamodule.usersfolder', 'Folder', required = True)
+    userfolder = fields.Many2One('thesamodule.usersfolder', 'Folder', required = True, ondelete='CASCADE')
     user = fields.Many2One('res.user','User', required = True)
+
+# class ThesaUpdateLine(ModelSQL, ModelView):
+#     'Thesa Update Lines'
+#     __name__='thesamodule.updateline'
+#     _rec_name='filename'
+#     filename = fields.Char('File Name', required=True, readonly=True)
+#     filebinary = fields.Binary('File store Qml', required=True, readonly=True)
+#     checksum = fields.Char('checksum', required=True, readonly=True)
+#     update = fields.Many2One('thesamodule.update','Update', required = True)
+    
+# class ThesaUpdate(ModelSQL, ModelView):
+#     'Thesa Update'
+#     __name__='thesamodule.update'
+#     type = fields.Selection([
+#         ('core', 'Core'),
+#         ('tools', 'Tools'),
+#         ('locale', 'Locale'),
+#         ], 'Type', required=True)
+#     date = fields.Date('Date', required=True)
+#     lines = fields.One2Many('thesamodule.updateline', 'update' ,'Files Update')
+    
+#     @staticmethod
+#     def default_type():
+#         return 'tools'
     
 class ViewResultThesaStart(ModelView):
     'View Result Thesa Start'
@@ -147,24 +178,17 @@ class ViewResultThesa(Wizard):
            # Button('Cancel', 'end', 'tryton-cancel'),
             Button('Ok', 'end', 'tryton-ok', True),
             ])
-        
-#    result_ok = StateView(
-#        'thesamodule.config_result_thesa.start',
-#        'thesamodule.config_result_thesa_start_view_form', [
-#            Button('Ok', 'end', 'tryton-ok', True),
-#            ])
-#    def default_result_ok(self, fields):
-#        return {"resumen":"bien"}
+    
     def end(self):
         return 'reload'
-    #recharge = StateTransition()
+    
     @classmethod
     def __setup__(cls):
         super(ViewResultThesa, cls).__setup__()
-        cls._error_messages.update({
-                'nofiles': (' There are no files in the qml directory, if you continue delete the files already loaded in bd.'),
-                'nofolder': ' qml folder: %s does not exist for this user group',
-                })
+        #     cls._error_messages.update({
+        #             'nofiles': (' There are no files in the qml directory, if you continue delete the files already loaded in bd.'),
+        #             'nofolder': ' qml folder: %s does not exist for this user group',
+        #             })
     def default_start(self, fields):
         DIR_QML = os.path.abspath(os.path.normpath(os.path.join(__file__, '..', 'qml')))
         if os.path.isdir(DIR_QML):
@@ -180,6 +204,7 @@ class ViewResultThesa(Wizard):
             usersFolder = Pool().get('thesamodule.usersfolder').search([])
             allok=True
             qmls=[]
+            warnings = ""
             for userfolder in usersFolder:
                 pathfolder = os.path.join(DIR_QML, userfolder.foldername)
                 if os.path.isdir(pathfolder):
@@ -200,14 +225,13 @@ class ViewResultThesa(Wizard):
                                 if md5_returned=="" or data =="":
                                     return {"resumen":"Error, file no read bytes"}
                 else:
-                    self.raise_user_warning(
-                             'idw',
-                             'nofolder',
-                              userfolder.foldername)
+                    warnings+= " " + userfolder.foldername
             if allok == True and len(qmls)>0:
                 thesaconfig.title="Last Update: "+str(datetime.now())
                 thesaconfig.save()
-                return {"resumen":"The load was successful, may have to reload to see the changes"}
+                if warnings!="":
+                    warnings = "\nWARNING! qml folders: %s , not found!"%(warnings)
+                return {"resumen":"The load was successful, may have to reload to see the changes"+warnings}
             else:
                 return {"resumen":"Error, read files"}
         else:
